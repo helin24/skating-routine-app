@@ -1,3 +1,4 @@
+
 # Implementation Plan: Skating Routine App
 
 This document outlines the phased implementation plan for building the Skating Routine App.
@@ -5,6 +6,15 @@ This document outlines the phased implementation plan for building the Skating R
 ## Journal
 
 *Chronological log of actions, learnings, and deviations.*
+
+**2025-10-02: Phase 2**
+- Added dependencies for `sqflite`, `path_provider`, and `path`.
+- Created all data models and the `DatabaseHelper` service.
+- **Learnings:** Made a mistake by not including `toMap`/`fromMap` methods in the models initially, which caused a temporary build breakage. Also introduced a bug in the `insertRoutine` method by using the wrong ID. Both were identified and fixed.
+- Corrected lint issues by converting enums to `lowerCamelCase`.
+- Added a test dependency for `sqflite_common_ffi` and wrote unit tests for the database.
+- **Surprise:** The initial test failed due to improper singleton handling in the test's `tearDown`. Fixed this by adding a `close()` method to the `DatabaseHelper` to properly reset the state for tests.
+- All checks and tests passed.
 
 **2025-10-02: Phase 1**
 - Created the empty Flutter project, initialized the git repository, and created the feature branch.
@@ -36,19 +46,19 @@ This document outlines the phased implementation plan for building the Skating R
 
 ## Phase 2: Data Models and Persistence Layer
 
-- [ ] Add dependencies: `sqflite`, `path_provider`, and `path`.
-- [ ] Create the data model files in `lib/src/models/` (`user.dart`, `routine.dart`, `skating_element.dart`) based on `DESIGN.md`.
-- [ ] Implement the `DatabaseHelper` service in `lib/src/services/database_helper.dart`. This service will handle all `sqflite` database operations (CRUD for users, routines, and elements).
-- [ ] Pre-populate the database with an initial set of USFS skating elements (jumps, spins) upon first database creation.
+- [x] Add dependencies: `sqflite`, `path_provider`, and `path`.
+- [x] Create the data model files in `lib/src/models/` (`user.dart`, `routine.dart`, `skating_element.dart`) based on `DESIGN.md`.
+- [x] Implement the `DatabaseHelper` service in `lib/src/services/database_helper.dart`. This service will handle all `sqflite` database operations (CRUD for users, routines, and elements).
+- [x] Pre-populate the database with an initial set of USFS skating elements (jumps, spins) upon first database creation.
 
 #### End of Phase Checklist
-- [ ] Create unit tests for the `DatabaseHelper` service to verify all CRUD operations.
-- [ ] Run `dart fix --apply` to clean up the code.
-- [ ] Run `dart analyze` and fix any issues.
-- [ ] Run all tests to ensure they pass.
-- [ ] Run `dart format .` to correct formatting.
-- [ ] Re-read `IMPLEMENTATION.md` to check for any changes.
-- [ ] Update the Journal in `IMPLEMENTATION.md` with learnings and deviations.
+- [x] Create unit tests for the `DatabaseHelper` service to verify all CRUD operations.
+- [x] Run `dart fix --apply` to clean up the code.
+- [x] Run `dart analyze` and fix any issues.
+- [x] Run all tests to ensure they pass.
+- [x] Run `dart format .` to correct formatting.
+- [x] Re-read `IMPLEMENTATION.md` to check for any changes.
+- [x] Update the Journal in `IMPLEMENTATION.md` with learnings and deviations.
 - [ ] Use `git diff` to verify changes and present the commit message for approval.
 - [ ] Wait for approval before committing and moving to the next phase.
 
