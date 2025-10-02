@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:skating_routine_app/src/providers/profile_provider.dart';
+import 'package:skating_routine_app/src/providers/routine_provider.dart';
+import 'package:skating_routine_app/src/ui/screens/profile_screen.dart';
+import 'package:skating_routine_app/src/ui/screens/routine_list_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,8 +14,17 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(body: Center(child: Text('Hello World!'))),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
+        ChangeNotifierProvider(create: (_) => RoutineProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Skating Routine App',
+        theme: ThemeData(primarySwatch: Colors.blue),
+        home: const RoutineListScreen(),
+        routes: {'/profile': (context) => const ProfileScreen()},
+      ),
     );
   }
 }
