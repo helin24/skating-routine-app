@@ -1,4 +1,3 @@
-
 # Implementation Plan: Skating Routine App
 
 This document outlines the phased implementation plan for building the Skating Routine App.
@@ -6,6 +5,13 @@ This document outlines the phased implementation plan for building the Skating R
 ## Journal
 
 *Chronological log of actions, learnings, and deviations.*
+
+**2025-10-02: Phase 3**
+- Added the `provider` package for state management.
+- Implemented the `TransitionValidator` service with initial rule logic.
+- Created the `ProfileProvider` and `RoutineProvider` to manage application state.
+- Added unit tests for the `TransitionValidator`.
+- All checks and tests passed.
 
 **2025-10-02: Phase 2**
 - Added dependencies for `sqflite`, `path_provider`, and `path`.
@@ -59,27 +65,27 @@ This document outlines the phased implementation plan for building the Skating R
 - [x] Run `dart format .` to correct formatting.
 - [x] Re-read `IMPLEMENTATION.md` to check for any changes.
 - [x] Update the Journal in `IMPLEMENTATION.md` with learnings and deviations.
-- [ ] Use `git diff` to verify changes and present the commit message for approval.
-- [ ] Wait for approval before committing and moving to the next phase.
+- [x] Use `git diff` to verify changes and present the commit message for approval.
+- [x] Wait for approval before committing and moving to the next phase.
 
 ---
 
 ## Phase 3: Core Logic and State Management
 
-- [ ] Add `provider` dependency for state management.
-- [ ] Implement the `TransitionValidator` service in `lib/src/services/transition_validator.dart` as described in `DESIGN.md`.
-- [ ] Create a `ProfileProvider` in `lib/src/providers/profile_provider.dart` to manage the user's state (level, rotation direction).
-- [ ] Create a `RoutineProvider` in `lib/src/providers/routine_provider.dart` to manage the state of the routine currently being built.
+- [x] Add `provider` dependency for state management.
+- [x] Implement the `TransitionValidator` service in `lib/src/services/transition_validator.dart` as described in `DESIGN.md`.
+- [x] Create a `ProfileProvider` in `lib/src/providers/profile_provider.dart` to manage the user's state (level, rotation direction).
+- [x] Create a `RoutineProvider` in `lib/src/providers/routine_provider.dart` to manage the state of the routine currently being built.
 
 #### End of Phase Checklist
-- [ ] Create unit tests for the `TransitionValidator` service.
-- [ ] Run `dart fix --apply`.
-- [ ] Run `dart analyze`.
-- [ ] Run all tests.
-- [ ] Run `dart format .`.
-- [ ] Re-read `IMPLEMENTATION.md`.
-- [ ] Update the Journal.
-- [ ] Use `git diff` and present the commit message for approval.
+- [x] Create unit tests for the `TransitionValidator` service.
+- [x] Run `dart fix --apply`.
+- [x] Run `dart analyze`.
+- [x] Run all tests.
+- [x] Run `dart format .`.
+- [x] Re-read `IMPLEMENTATION.md`.
+- [x] Update the Journal.
+- [ ] Use `git diff` to verify changes and present the commit message for approval.
 - [ ] Wait for approval.
 
 ---
