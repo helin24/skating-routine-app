@@ -1,4 +1,3 @@
-
 # Implementation Plan: Skating Routine App
 
 This document outlines the phased implementation plan for building the Skating Routine App.
@@ -6,6 +5,12 @@ This document outlines the phased implementation plan for building the Skating R
 ## Journal
 
 *Chronological log of actions, learnings, and deviations.*
+
+**2025-10-02: Phase 1**
+- Created the empty Flutter project, initialized the git repository, and created the feature branch.
+- Updated `pubspec.yaml`, `README.md`, and `CHANGELOG.md`.
+- **Deviation:** The initial commit was made before running the end-of-phase checks. This order will be corrected in subsequent phases.
+- Ran `dart fix`, `dart analyze`, and `dart format` on the initial project. No issues were found.
 
 ---
 
@@ -18,14 +23,14 @@ This document outlines the phased implementation plan for building the Skating R
 
 ## Phase 1: Project Initialization and Setup
 
-- [ ] Create an empty Flutter package in the current directory (`/Users/helinx/Documents/test/skating_routine_app`) that supports Android and iOS.
-- [ ] Initialize a new git repository in the project directory.
-- [ ] Create a new branch `feature/skating-routine-app`.
-- [ ] Remove the boilerplate `test/` directory, as it will be replaced with more structured tests.
-- [ ] Update the `description` in `pubspec.yaml` to "A Flutter app to help figure skaters build well-balanced routines." and set the `version` to `0.1.0`.
-- [ ] Create a `CHANGELOG.md` file with an initial entry for version `0.1.0`.
-- [ ] Update `README.md` with a placeholder description.
-- [ ] Commit the initial empty version of the package.
+- [x] Create an empty Flutter package in the current directory (`/Users/helinx/Documents/test/skating_routine_app`) that supports Android and iOS.
+- [x] Initialize a new git repository in the project directory.
+- [x] Create a new branch `feature/skating-routine-app`.
+- [x] Remove the boilerplate `test/` directory, as it will be replaced with more structured tests.
+- [x] Update the `description` in `pubspec.yaml` to "A Flutter app to help figure skaters build well-balanced routines." and set the `version` to `0.1.0`.
+- [x] Create a `CHANGELOG.md` file with an initial entry for version `0.1.0`.
+- [x] Update `README.md` with a placeholder description.
+- [x] Commit the initial empty version of the package.
 
 ---
 
