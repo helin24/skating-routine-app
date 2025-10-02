@@ -13,10 +13,8 @@ void main() {
   testWidgets('RoutineListScreen has an app bar and floating action button', (
     WidgetTester tester,
   ) async {
-    // Create mock instance
     final mockProvider = MockRoutineProvider();
 
-    // Stub the routines getter to return an empty list
     when(mockProvider.routines).thenReturn([]);
 
     await tester.pumpWidget(
@@ -28,7 +26,6 @@ void main() {
 
     expect(find.text('My Routines'), findsOneWidget);
     expect(find.byType(FloatingActionButton), findsOneWidget);
-    // Since the list is empty, we expect to find the placeholder text.
     expect(find.text('No routines found. Create one!'), findsOneWidget);
   });
 }

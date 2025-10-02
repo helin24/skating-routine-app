@@ -15,10 +15,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // Use addPostFrameCallback to ensure the provider is available.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Assuming user with ID 1 is the main user.
-      // In a real app, this would come from an auth service.
       Provider.of<ProfileProvider>(context, listen: false).loadProfile(1);
     });
   }

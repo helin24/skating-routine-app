@@ -14,12 +14,11 @@ import 'profile_screen_test.mocks.dart';
 void main() {
   testWidgets(
     'ProfileScreen has dropdowns for level and direction',
-    skip: true,
+    skip:
+        true, // Temporarily skipping due to unresolved test environment issues.
     (WidgetTester tester) async {
-      // Create mock instance from the generated file
       final mockProvider = MockProfileProvider();
 
-      // Create a default user to be returned by the mock
       final defaultUser = User(
         id: 1,
         name: 'Default User',
@@ -27,7 +26,6 @@ void main() {
         rotationDirection: RotationDirection.counterClockwise,
       );
 
-      // Stub the user getter and methods
       when(mockProvider.user).thenReturn(defaultUser);
       when(mockProvider.loadProfile(any)).thenAnswer((_) async {});
 
@@ -38,7 +36,8 @@ void main() {
         ),
       );
 
-      // The UI should now be built with the user data
+      await tester.pumpAndSettle();
+
       expect(find.text('Skating Level:'), findsOneWidget);
       expect(find.byType(DropdownButton<dynamic>), findsNWidgets(2));
       expect(find.text('Rotation Direction:'), findsOneWidget);
