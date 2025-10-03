@@ -94,6 +94,18 @@ class DatabaseHelper {
     });
   }
 
+  Future<List<SkatingElement>> searchElements(String query) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'skating_elements',
+      where: 'name LIKE ?',
+      whereArgs: ['%$query%'],
+    );
+    return List.generate(maps.length, (i) {
+      return SkatingElement.fromMap(maps[i]);
+    });
+  }
+
   // Methods for User
   Future<int> upsertUser(User user) async {
     final db = await database;

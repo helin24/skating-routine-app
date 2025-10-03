@@ -1,3 +1,4 @@
+
 # Implementation Plan: Skating Routine App
 
 This document outlines the phased implementation plan for building the Skating Routine App.
@@ -5,6 +6,14 @@ This document outlines the phased implementation plan for building the Skating R
 ## Journal
 
 *Chronological log of actions, learnings, and deviations.*
+
+**2025-10-02: Phase 5**
+- Built the `RoutineBuilderScreen` with placeholders for search, list, and diagram.
+- Implemented element search and display of results.
+- Implemented the reorderable list for the routine elements.
+- Integrated the `TransitionValidator` to show errors on invalid transitions.
+- Created a basic `RinkPainter` and integrated it into the UI.
+- All checks and tests passed (with one skipped).
 
 **2025-10-02: Phase 4 (Redo)**
 - Re-implemented Phase 4 after a file-system consistency issue caused the previous work to be lost.
@@ -110,29 +119,29 @@ This document outlines the phased implementation plan for building the Skating R
 - [x] Run `dart format .`.
 - [x] Re-read `IMPLEMENTATION.md`.
 - [x] Update the Journal.
-- [ ] Use `git diff` to verify changes and present the commit message for approval.
-- [ ] Wait for approval.
+- [x] Use `git diff` to verify changes and present the commit message for approval.
+- [x] Wait for approval.
 
 ---
 
 ## Phase 5: UI - Routine Builder Screen
 
-- [ ] Build the `RoutineBuilderScreen` widget.
-- [ ] Implement the element search functionality.
-- [ ] Implement the list view for the routine.
-- [ ] Integrate the `TransitionValidator`.
-- [ ] Implement the `RinkPainter` class.
-- [ ] Add the `CustomPaint` widget.
+- [x] Build the `RoutineBuilderScreen` widget.
+- [x] Implement the element search functionality.
+- [x] Implement the list view for the routine.
+- [x] Integrate the `TransitionValidator`.
+- [x] Implement the `RinkPainter` class.
+- [x] Add the `CustomPaint` widget.
 
 #### End of Phase Checklist
-- [ ] Create widget tests for the `RoutineBuilderScreen`.
-- [ ] Run `dart fix --apply`.
-- [ ] Run `dart analyze`.
-- [ ] Run all tests.
-- [ ] Run `dart format .`.
-- [ ] Re-read `IMPLEMENTATION.md`.
-- [ ] Update the Journal.
-- [ ] Use `git diff` and present the commit message for approval.
+- [x] Create widget tests for the `RoutineBuilderScreen`.
+- [x] Run `dart fix --apply`.
+- [x] Run `dart analyze`.
+- [x] Run all tests.
+- [x] Run `dart format .`.
+- [x] Re-read `IMPLEMENTATION.md`.
+- [x] Update the Journal.
+- [ ] Use `git diff` to verify changes and present the commit message for approval.
 - [ ] Wait for approval.
 
 ---
