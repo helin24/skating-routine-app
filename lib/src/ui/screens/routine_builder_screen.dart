@@ -12,10 +12,21 @@ class RoutineBuilderScreen extends StatefulWidget {
 
 class _RoutineBuilderScreenState extends State<RoutineBuilderScreen> {
   final _searchController = TextEditingController();
+  late final TextEditingController _nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    final routineName =
+        Provider.of<RoutineProvider>(context, listen: false).activeRoutine?.name ??
+            '';
+    _nameController = TextEditingController(text: routineName);
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -32,7 +43,16 @@ class _RoutineBuilderScreenState extends State<RoutineBuilderScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(routineProvider.activeRoutine?.name ?? 'New Routine'),
+          title: TextField(
+            controller: _nameController,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Routine Name',
+            ),
+            onChanged: (newName) {
+              routineProvider.updateRoutineName(newName);
+            },
+          ),
         ),
         body: Column(
           children: [

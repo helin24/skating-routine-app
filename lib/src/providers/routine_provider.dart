@@ -72,6 +72,13 @@ class RoutineProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateRoutineName(String name) {
+    if (_activeRoutine != null) {
+      _activeRoutine = _activeRoutine!.copyWith(name: name);
+      notifyListeners();
+    }
+  }
+
   void addElementToRoutine(SkatingElement element) {
     if (_activeRoutine != null) {
       _activeRoutine = _activeRoutine!.copyWith(
