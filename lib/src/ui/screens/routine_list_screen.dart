@@ -4,25 +4,8 @@ import 'package:skating_routine_app/src/providers/profile_provider.dart';
 import 'package:skating_routine_app/src/providers/routine_provider.dart';
 import 'package:skating_routine_app/src/services/auth_service.dart';
 
-class RoutineListScreen extends StatefulWidget {
+class RoutineListScreen extends StatelessWidget {
   const RoutineListScreen({super.key});
-
-  @override
-  State<RoutineListScreen> createState() => _RoutineListScreenState();
-}
-
-class _RoutineListScreenState extends State<RoutineListScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final user = Provider.of<ProfileProvider>(context, listen: false).user;
-      if (user != null) {
-        Provider.of<RoutineProvider>(context, listen: false)
-            .loadRoutines(user.id!);
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +40,23 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
             itemCount: provider.routines.length,
             itemBuilder: (context, index) {
               final routine = provider.routines[index];
-              return ListTile(
-                title: Text(routine.name),
-                subtitle: Text('${routine.elements.length} elements'),
-                onTap: () {
-                  Provider.of<RoutineProvider>(context, listen: false)
-                      .setActiveRoutine(routine);
-                  Navigator.pushNamed(context, '/routine-builder');
+              return Dismissible(
+                key: Key(routine.id!),
+                onDismissed: (direction) {
+                  provider.deleteRoutine(routine.id!);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('${routine.name} deleted')),
+                  );
                 },
+                background: Container(color: Colors.red),
+                child: ListTile(
+                  title: Text(routine.name),
+                  subtitle: Text('${routine.elements.length} elements'),
+                  onTap: () {
+                    provider.setActiveRoutine(routine);
+                    Navigator.pushNamed(context, '/routine-builder');
+                  },
+                ),
               );
             },
           );

@@ -1,8 +1,9 @@
-import 'skating_element.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:skating_routine_app/src/models/skating_element.dart';
 
 class Routine {
-  int? id;
-  final int userId;
+  final String? id;
+  final String userId;
   final String name;
   final List<SkatingElement> elements;
 
@@ -18,18 +19,43 @@ class Routine {
       id: map['id'],
       userId: map['userId'],
       name: map['name'],
-      elements: [], // Elements will be fetched separately
+      elements: (map['elements'] as List)
+          .map((e) => SkatingElement.fromMap(e))
+          .toList(),
+    );
+  }
+
+  factory Routine.fromFirestore(DocumentSnapshot doc) {
+    final map = doc.data() as Map<String, dynamic>;
+    return Routine(
+      id: doc.id,
+      userId: map['userId'],
+      name: map['name'],
+      elements: (map['elements'] as List)
+          .map((e) => SkatingElement.fromMap(e))
+          .toList(),
     );
   }
 
   Map<String, dynamic> toMap() {
-    final map = <String, dynamic>{
+    return {
       'userId': userId,
       'name': name,
+      'elements': elements.map((e) => e.toMap()).toList(),
     };
-    if (id != null) {
-      map['id'] = id;
-    }
-    return map;
+  }
+
+  Routine copyWith({
+    String? id,
+    String? userId,
+    String? name,
+    List<SkatingElement>? elements,
+  }) {
+    return Routine(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      elements: elements ?? this.elements,
+    );
   }
 }

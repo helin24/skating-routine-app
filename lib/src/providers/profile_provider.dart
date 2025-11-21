@@ -1,17 +1,16 @@
-import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter/foundation.dart';
 import 'package:skating_routine_app/src/models/skating_element.dart';
 import 'package:skating_routine_app/src/models/user.dart';
-import 'package:skating_routine_app/src/services/database_helper.dart';
+import 'package:skating_routine_app/src/services/firestore_service.dart';
 
 class ProfileProvider with ChangeNotifier {
-  final DatabaseHelper _dbHelper = DatabaseHelper();
+  final FirestoreService _firestoreService = FirestoreService();
   User? _user;
 
   User? get user => _user;
 
   Future<void> loadProfile(String firebaseUid) async {
-    _user = await _dbHelper.getUserByFirebaseUid(firebaseUid);
+    _user = await _firestoreService.getUser(firebaseUid);
     if (_user == null) {
       final newUser = User(
         firebaseUid: firebaseUid,
@@ -19,14 +18,14 @@ class ProfileProvider with ChangeNotifier {
         level: SkatingLevel.prePreliminary,
         rotationDirection: RotationDirection.counterClockwise,
       );
-      await _dbHelper.upsertUser(newUser);
-      _user = await _dbHelper.getUserByFirebaseUid(firebaseUid);
+      await _firestoreService.upsertUser(newUser);
+      _user = newUser;
     }
     notifyListeners();
   }
 
   Future<void> updateProfile(User user) async {
-    await _dbHelper.upsertUser(user);
+    await _firestoreService.upsertUser(user);
     _user = user;
     notifyListeners();
   }

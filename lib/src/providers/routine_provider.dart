@@ -1,33 +1,50 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:skating_routine_app/src/models/routine.dart';
 import 'package:skating_routine_app/src/models/skating_element.dart';
 import 'package:skating_routine_app/src/providers/profile_provider.dart';
 import 'package:skating_routine_app/src/services/database_helper.dart';
+import 'package:skating_routine_app/src/services/firestore_service.dart';
 import 'package:skating_routine_app/src/services/transition_validator.dart';
 
 class RoutineProvider with ChangeNotifier {
+  final FirestoreService _firestoreService = FirestoreService();
   final DatabaseHelper _dbHelper = DatabaseHelper();
   final TransitionValidator _validator = TransitionValidator();
-  final ProfileProvider _profileProvider;
+  ProfileProvider? _profileProvider;
+
   List<Routine> _routines = [];
   Routine? _activeRoutine;
   List<SkatingElement> _searchResults = [];
   final Map<int, bool> _validationErrors = {};
+  StreamSubscription? _routinesSubscription;
 
-  RoutineProvider(this._profileProvider);
+  RoutineProvider();
 
   List<Routine> get routines => _routines;
   Routine? get activeRoutine => _activeRoutine;
   List<SkatingElement> get searchResults => _searchResults;
   Map<int, bool> get validationErrors => _validationErrors;
 
-  void startNewRoutine() {
-    _activeRoutine = Routine(
-      userId: _profileProvider.user!.id!,
-      name: 'New Routine',
-      elements: [],
-    );
-    notifyListeners();
+  void updateUser(ProfileProvider profileProvider) {
+    if (_profileProvider?.user?.firebaseUid !=
+        profileProvider.user?.firebaseUid) {
+      _profileProvider = profileProvider;
+      if (profileProvider.user != null) {
+        _routinesSubscription?.cancel();
+        _routinesSubscription = _firestoreService
+            .getRoutines(profileProvider.user!.firebaseUid)
+            .listen((routines) {
+          _routines = routines;
+          notifyListeners();
+        });
+      } else {
+        _routinesSubscription?.cancel();
+        _routines = [];
+        notifyListeners();
+      }
+    }
   }
 
   Future<void> searchElements(String query) async {
@@ -39,8 +56,13 @@ class RoutineProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadRoutines(int userId) async {
-    _routines = await _dbHelper.getRoutinesForUser(userId);
+  void startNewRoutine() {
+    if (_profileProvider?.user == null) return;
+    _activeRoutine = Routine(
+      userId: _profileProvider!.user!.firebaseUid,
+      name: 'New Routine',
+      elements: [],
+    );
     notifyListeners();
   }
 
@@ -52,7 +74,9 @@ class RoutineProvider with ChangeNotifier {
 
   void addElementToRoutine(SkatingElement element) {
     if (_activeRoutine != null) {
-      _activeRoutine!.elements.add(element);
+      _activeRoutine = _activeRoutine!.copyWith(
+        elements: [..._activeRoutine!.elements, element],
+      );
       _validateRoutine();
       notifyListeners();
     }
@@ -60,7 +84,9 @@ class RoutineProvider with ChangeNotifier {
 
   void removeElementFromRoutine(int index) {
     if (_activeRoutine != null) {
-      _activeRoutine!.elements.removeAt(index);
+      final newElements = List<SkatingElement>.from(_activeRoutine!.elements)
+        ..removeAt(index);
+      _activeRoutine = _activeRoutine!.copyWith(elements: newElements);
       _validateRoutine();
       notifyListeners();
     }
@@ -71,8 +97,10 @@ class RoutineProvider with ChangeNotifier {
       if (newIndex > oldIndex) {
         newIndex -= 1;
       }
-      final element = _activeRoutine!.elements.removeAt(oldIndex);
-      _activeRoutine!.elements.insert(newIndex, element);
+      final newElements = List<SkatingElement>.from(_activeRoutine!.elements);
+      final element = newElements.removeAt(oldIndex);
+      newElements.insert(newIndex, element);
+      _activeRoutine = _activeRoutine!.copyWith(elements: newElements);
       _validateRoutine();
       notifyListeners();
     }
@@ -80,12 +108,13 @@ class RoutineProvider with ChangeNotifier {
 
   void _validateRoutine() {
     _validationErrors.clear();
-    if (_activeRoutine == null || _activeRoutine!.elements.length < 2) {
+    if (_activeRoutine == null ||
+        _activeRoutine!.elements.length < 2 ||
+        _profileProvider?.user == null) {
       return;
     }
 
-    final direction = _profileProvider.user?.rotationDirection ??
-        RotationDirection.counterClockwise;
+    final direction = _profileProvider!.user!.rotationDirection;
 
     for (int i = 0; i < _activeRoutine!.elements.length - 1; i++) {
       final current = _activeRoutine!.elements[i];
@@ -98,9 +127,17 @@ class RoutineProvider with ChangeNotifier {
 
   Future<void> saveActiveRoutine() async {
     if (_activeRoutine != null) {
-      await _dbHelper.insertRoutine(_activeRoutine!);
-      // Reload routines to get the updated list
-      await loadRoutines(_activeRoutine!.userId);
+      await _firestoreService.upsertRoutine(_activeRoutine!);
     }
+  }
+
+  Future<void> deleteRoutine(String routineId) async {
+    await _firestoreService.deleteRoutine(routineId);
+  }
+
+  @override
+  void dispose() {
+    _routinesSubscription?.cancel();
+    super.dispose();
   }
 }
