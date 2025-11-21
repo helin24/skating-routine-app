@@ -23,13 +23,15 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'skating_routines.db');
 
-    return await openDatabase(path, version: 1, onCreate: _onCreate);
+    return await openDatabase(path,
+        version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
   }
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE users(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        firebaseUid TEXT,
         name TEXT NOT NULL,
         level TEXT NOT NULL,
         rotationDirection TEXT NOT NULL
@@ -74,6 +76,12 @@ class DatabaseHelper {
     await _populateInitialData(db);
   }
 
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('ALTER TABLE users ADD COLUMN firebaseUid TEXT');
+    }
+  }
+
   Future<void> _populateInitialData(Database db) async {
     for (final element in initialElements) {
       await db.insert('skating_elements', element.toMap());
@@ -116,12 +124,12 @@ class DatabaseHelper {
     );
   }
 
-  Future<User?> getUser(int id) async {
+  Future<User?> getUserByFirebaseUid(String uid) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       'users',
-      where: 'id = ?',
-      whereArgs: [id],
+      where: 'firebaseUid = ?',
+      whereArgs: [uid],
     );
     if (maps.isNotEmpty) {
       return User.fromMap(maps.first);
