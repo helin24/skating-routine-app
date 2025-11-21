@@ -1,11 +1,12 @@
 enum SkatingLevel {
   prePreliminary,
   preliminary,
-  juvenile,
-  intermediate,
-  novice,
-  junior,
-  senior,
+  preBronze,
+  bronze,
+  preSilver,
+  silver,
+  preGold,
+  gold,
 }
 
 enum RotationDirection { clockwise, counterClockwise }

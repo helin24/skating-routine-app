@@ -15,7 +15,7 @@ class ProfileProvider with ChangeNotifier {
       final defaultUser = User(
         id: userId,
         name: 'Default User',
-        level: SkatingLevel.preliminary,
+        level: SkatingLevel.prePreliminary,
         rotationDirection: RotationDirection.counterClockwise,
       );
       await _dbHelper.upsertUser(defaultUser);
