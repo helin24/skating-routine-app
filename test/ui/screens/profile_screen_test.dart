@@ -14,8 +14,6 @@ import 'profile_screen_test.mocks.dart';
 void main() {
   testWidgets(
     'ProfileScreen has dropdowns for level and direction',
-    skip:
-        true, // Temporarily skipping due to unresolved test environment issues.
     (WidgetTester tester) async {
       final mockProvider = MockProfileProvider();
 

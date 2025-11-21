@@ -32,7 +32,9 @@ class RoutineListScreen extends StatelessWidget {
                 title: Text(routine.name),
                 subtitle: Text('${routine.elements.length} elements'),
                 onTap: () {
-                  // Navigate to Routine Builder Screen
+                  Provider.of<RoutineProvider>(context, listen: false)
+                      .setActiveRoutine(routine);
+                  Navigator.pushNamed(context, '/routine-builder');
                 },
               );
             },
@@ -41,7 +43,9 @@ class RoutineListScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Create a new routine and navigate to builder
+          Provider.of<RoutineProvider>(context, listen: false)
+              .startNewRoutine();
+          Navigator.pushNamed(context, '/routine-builder');
         },
         child: const Icon(Icons.add),
       ),

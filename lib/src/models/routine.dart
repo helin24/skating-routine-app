@@ -1,13 +1,13 @@
 import 'skating_element.dart';
 
 class Routine {
-  final int id;
+  int? id;
   final int userId;
   final String name;
   final List<SkatingElement> elements;
 
   Routine({
-    required this.id,
+    this.id,
     required this.userId,
     required this.name,
     required this.elements,
@@ -23,6 +23,13 @@ class Routine {
   }
 
   Map<String, dynamic> toMap() {
-    return {'id': id, 'userId': userId, 'name': name};
+    final map = <String, dynamic>{
+      'userId': userId,
+      'name': name,
+    };
+    if (id != null) {
+      map['id'] = id;
+    }
+    return map;
   }
 }

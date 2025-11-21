@@ -141,13 +141,13 @@ This document outlines the phased implementation plan for building the Skating R
 - [x] Run `dart format .`.
 - [x] Re-read `IMPLEMENTATION.md`.
 - [x] Update the Journal.
-- [ ] Use `git diff` to verify changes and present the commit message for approval.
-- [ ] Wait for approval.
+- [x] Use `git diff` to verify changes and present the commit message for approval.
+- [x] Wait for approval.
 
 ---
 
 ## Phase 6: Finalization and Documentation
 
-- [ ] Create a comprehensive `README.md` file.
-- [ ] Create a `GEMINI.md` file.
-- [ ] Ask the user to inspect the app and the code.
+- [x] Create a comprehensive `README.md` file.
+- [x] Create a `GEMINI.md` file.
+- [x] Ask the user to inspect the app and the code.

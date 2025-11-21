@@ -1,21 +1,34 @@
 import 'package:flutter/foundation.dart';
 import 'package:skating_routine_app/src/models/routine.dart';
 import 'package:skating_routine_app/src/models/skating_element.dart';
+import 'package:skating_routine_app/src/providers/profile_provider.dart';
 import 'package:skating_routine_app/src/services/database_helper.dart';
 import 'package:skating_routine_app/src/services/transition_validator.dart';
 
 class RoutineProvider with ChangeNotifier {
   final DatabaseHelper _dbHelper = DatabaseHelper();
   final TransitionValidator _validator = TransitionValidator();
+  final ProfileProvider _profileProvider;
   List<Routine> _routines = [];
   Routine? _activeRoutine;
   List<SkatingElement> _searchResults = [];
   final Map<int, bool> _validationErrors = {};
 
+  RoutineProvider(this._profileProvider);
+
   List<Routine> get routines => _routines;
   Routine? get activeRoutine => _activeRoutine;
   List<SkatingElement> get searchResults => _searchResults;
   Map<int, bool> get validationErrors => _validationErrors;
+
+  void startNewRoutine() {
+    _activeRoutine = Routine(
+      userId: _profileProvider.user!.id,
+      name: 'New Routine',
+      elements: [],
+    );
+    notifyListeners();
+  }
 
   Future<void> searchElements(String query) async {
     if (query.isEmpty) {
@@ -33,6 +46,7 @@ class RoutineProvider with ChangeNotifier {
 
   void setActiveRoutine(Routine routine) {
     _activeRoutine = routine;
+    _validateRoutine();
     notifyListeners();
   }
 
@@ -70,8 +84,8 @@ class RoutineProvider with ChangeNotifier {
       return;
     }
 
-    // TODO: Get user from ProfileProvider instead of hardcoding.
-    const direction = RotationDirection.counterClockwise;
+    final direction = _profileProvider.user?.rotationDirection ??
+        RotationDirection.counterClockwise;
 
     for (int i = 0; i < _activeRoutine!.elements.length - 1; i++) {
       final current = _activeRoutine!.elements[i];
