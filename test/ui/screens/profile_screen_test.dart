@@ -24,7 +24,7 @@ void main() {
         rotationDirection: RotationDirection.counterClockwise,
       );
 
-      when(mockProvider.user).thenReturn(defaultUser);
+      when(mockProvider.currentUser).thenReturn(defaultUser);
       when(mockProvider.loadProfile(any)).thenAnswer((_) async {});
 
       await tester.pumpWidget(

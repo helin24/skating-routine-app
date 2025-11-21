@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "337766456598",
+    "project_id": "skating-routine-app",
+    "storage_bucket": "skating-routine-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337766456598:android:06353e0cc4d4d145a8c437",
+        "android_client_info": {
+          "package_name": "com.example.skating_routine_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3nJE0O8vEpYVw3UKqxw5Fq4ORCsgf6Fo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,13 +1,13 @@
-import 'skating_element.dart';
+import 'package:skating_routine_app/src/models/skating_element.dart';
 
 class User {
-  final int id;
+  int? id;
   final String name;
   final SkatingLevel level;
   final RotationDirection rotationDirection;
 
   User({
-    required this.id,
+    this.id,
     required this.name,
     required this.level,
     required this.rotationDirection,
@@ -17,21 +17,22 @@ class User {
     return User(
       id: map['id'],
       name: map['name'],
-      level: SkatingLevel.values.firstWhere(
-        (e) => e.toString() == map['level'],
-      ),
-      rotationDirection: RotationDirection.values.firstWhere(
-        (e) => e.toString() == map['rotationDirection'],
-      ),
+      level: SkatingLevel.values
+          .firstWhere((e) => e.toString() == map['level']),
+      rotationDirection: RotationDirection.values
+          .firstWhere((e) => e.toString() == map['rotationDirection']),
     );
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
+    final map = <String, dynamic>{
       'name': name,
       'level': level.toString(),
       'rotationDirection': rotationDirection.toString(),
     };
+    if (id != null) {
+      map['id'] = id;
+    }
+    return map;
   }
 }

@@ -1,0 +1,34 @@
+type User @table {
+  displayName: String!
+  createdAt: Timestamp!
+  email: String
+  photoUrl: String
+  bio: String
+}
+
+type Routine @table {
+  user: User!
+  name: String!
+  createdAt: Timestamp!
+  status: String!
+  description: String
+  sharedLink: String
+  updatedAt: Timestamp
+}
+
+type Element @table {
+  name: String!
+  type: String!
+  difficulty: Int!
+  description: String
+  scoreValue: Float
+}
+
+type RoutineElement @table(key: ["routine", "element"]) {
+  routine: Routine!
+  element: Element!
+  position: Int!
+  notes: String
+  completedDate: Date
+  score: Float
+}
