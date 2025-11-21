@@ -63,12 +63,42 @@ class RoutineListScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Provider.of<RoutineProvider>(context, listen: false).startNewRoutine();
-          Navigator.pushNamed(context, '/routine-builder');
-        },
+        onPressed: () => _showCreateRoutineDialog(context),
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  void _showCreateRoutineDialog(BuildContext context) {
+    final TextEditingController nameController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Create New Routine'),
+          content: TextField(
+            controller: nameController,
+            decoration: const InputDecoration(hintText: 'Enter routine name'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (nameController.text.isNotEmpty) {
+                  Provider.of<RoutineProvider>(context, listen: false)
+                      .startNewRoutine(nameController.text);
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/routine-builder');
+                }
+              },
+              child: const Text('Create'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

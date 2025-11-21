@@ -56,11 +56,11 @@ class RoutineProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void startNewRoutine() {
+  void startNewRoutine(String name) {
     if (_profileProvider?.user == null) return;
     _activeRoutine = Routine(
       userId: _profileProvider!.user!.firebaseUid,
-      name: 'New Routine',
+      name: name,
       elements: [],
     );
     notifyListeners();
