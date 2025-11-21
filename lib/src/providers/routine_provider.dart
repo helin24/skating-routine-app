@@ -23,7 +23,7 @@ class RoutineProvider with ChangeNotifier {
 
   void startNewRoutine() {
     _activeRoutine = Routine(
-      userId: _profileProvider.currentUser!.id!,
+      userId: _profileProvider.user!.id!,
       name: 'New Routine',
       elements: [],
     );
@@ -84,7 +84,7 @@ class RoutineProvider with ChangeNotifier {
       return;
     }
 
-    final direction = _profileProvider.currentUser?.rotationDirection ??
+    final direction = _profileProvider.user?.rotationDirection ??
         RotationDirection.counterClockwise;
 
     for (int i = 0; i < _activeRoutine!.elements.length - 1; i++) {

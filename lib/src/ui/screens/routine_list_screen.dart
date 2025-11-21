@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skating_routine_app/src/providers/profile_provider.dart';
 import 'package:skating_routine_app/src/providers/routine_provider.dart';
+import 'package:skating_routine_app/src/services/auth_service.dart';
 
 class RoutineListScreen extends StatefulWidget {
   const RoutineListScreen({super.key});
@@ -14,16 +15,20 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
   @override
   void initState() {
     super.initState();
-    final user = Provider.of<ProfileProvider>(context, listen: false).currentUser;
-    if (user != null) {
-      Provider.of<RoutineProvider>(context, listen: false).loadRoutines(user.id!);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final user = Provider.of<ProfileProvider>(context, listen: false).user;
+      if (user != null) {
+        Provider.of<RoutineProvider>(context, listen: false)
+            .loadRoutines(user.id!);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final profileProvider = Provider.of<ProfileProvider>(context);
-    final userName = profileProvider.currentUser?.name ?? 'Skater';
+    final authService = Provider.of<AuthService>(context, listen: false);
+    final userName = profileProvider.user?.name ?? 'Skater';
 
     return Scaffold(
       appBar: AppBar(
@@ -35,13 +40,13 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
               Navigator.pushNamed(context, '/profile');
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              authService.signOut();
+            },
+          ),
         ],
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/profile-selection');
-          },
-        ),
       ),
       body: Consumer<RoutineProvider>(
         builder: (context, provider, child) {

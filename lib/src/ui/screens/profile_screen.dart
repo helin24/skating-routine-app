@@ -13,7 +13,7 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('User Profile')),
       body: Consumer<ProfileProvider>(
         builder: (context, provider, child) {
-          if (provider.currentUser == null) {
+          if (provider.user == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -24,15 +24,16 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 const Text('Skating Level:', style: TextStyle(fontSize: 18)),
                 DropdownButton<SkatingLevel>(
-                  value: provider.currentUser!.level,
+                  value: provider.user!.level,
                   onChanged: (SkatingLevel? newValue) {
                     if (newValue != null) {
                       final updatedUser = User(
-                        id: provider.currentUser!.id,
-                        name: provider.currentUser!.name,
+                        id: provider.user!.id,
+                        firebaseUid: provider.user!.firebaseUid,
+                        name: provider.user!.name,
                         level: newValue,
                         rotationDirection:
-                            provider.currentUser!.rotationDirection,
+                            provider.user!.rotationDirection,
                       );
                       provider.updateProfile(updatedUser);
                     }
@@ -50,13 +51,14 @@ class ProfileScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 18),
                 ),
                 DropdownButton<RotationDirection>(
-                  value: provider.currentUser!.rotationDirection,
+                  value: provider.user!.rotationDirection,
                   onChanged: (RotationDirection? newValue) {
                     if (newValue != null) {
                       final updatedUser = User(
-                        id: provider.currentUser!.id,
-                        name: provider.currentUser!.name,
-                        level: provider.currentUser!.level,
+                        id: provider.user!.id,
+                        firebaseUid: provider.user!.firebaseUid,
+                        name: provider.user!.name,
+                        level: provider.user!.level,
                         rotationDirection: newValue,
                       );
                       provider.updateProfile(updatedUser);

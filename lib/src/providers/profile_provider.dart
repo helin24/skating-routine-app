@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter/foundation.dart';
 import 'package:skating_routine_app/src/models/skating_element.dart';
 import 'package:skating_routine_app/src/models/user.dart';
@@ -5,45 +6,33 @@ import 'package:skating_routine_app/src/services/database_helper.dart';
 
 class ProfileProvider with ChangeNotifier {
   final DatabaseHelper _dbHelper = DatabaseHelper();
-  List<User> _users = [];
-  User? _currentUser;
+  User? _user;
 
-  List<User> get users => _users;
-  User? get currentUser => _currentUser;
+  User? get user => _user;
 
-  Future<void> loadUsers() async {
-    _users = await _dbHelper.getAllUsers();
-    if (_users.isEmpty) {
-      final defaultUser = User(
-        name: 'Default User',
+  Future<void> loadProfile(String firebaseUid) async {
+    _user = await _dbHelper.getUserByFirebaseUid(firebaseUid);
+    if (_user == null) {
+      final newUser = User(
+        firebaseUid: firebaseUid,
+        name: 'New Skater',
         level: SkatingLevel.prePreliminary,
         rotationDirection: RotationDirection.counterClockwise,
       );
-      await _dbHelper.upsertUser(defaultUser);
-      _users = await _dbHelper.getAllUsers();
+      await _dbHelper.upsertUser(newUser);
+      _user = await _dbHelper.getUserByFirebaseUid(firebaseUid);
     }
     notifyListeners();
   }
 
-  void setCurrentUser(User user) {
-    _currentUser = user;
+  Future<void> updateProfile(User user) async {
+    await _dbHelper.upsertUser(user);
+    _user = user;
     notifyListeners();
   }
 
-  Future<void> createNewUser(String name) async {
-    final newUser = User(
-      name: name,
-      level: SkatingLevel.prePreliminary,
-      rotationDirection: RotationDirection.counterClockwise,
-    );
-    await _dbHelper.upsertUser(newUser);
-    await loadUsers();
-  }
-
-  Future<void> updateProfile(User user) async {
-    await _dbHelper.upsertUser(user);
-    await loadUsers();
-    _currentUser = user;
+  void clearProfile() {
+    _user = null;
     notifyListeners();
   }
 }
