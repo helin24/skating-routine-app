@@ -56,11 +56,11 @@ class RoutineProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void startNewRoutine() {
+  void startNewRoutine(String name) {
     if (_profileProvider?.user == null) return;
     _activeRoutine = Routine(
       userId: _profileProvider!.user!.firebaseUid,
-      name: 'New Routine',
+      name: name,
       elements: [],
     );
     notifyListeners();
@@ -70,6 +70,13 @@ class RoutineProvider with ChangeNotifier {
     _activeRoutine = routine;
     _validateRoutine();
     notifyListeners();
+  }
+
+  void updateRoutineName(String name) {
+    if (_activeRoutine != null) {
+      _activeRoutine = _activeRoutine!.copyWith(name: name);
+      notifyListeners();
+    }
   }
 
   void addElementToRoutine(SkatingElement element) {
