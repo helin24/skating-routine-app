@@ -3,16 +3,16 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:skating_routine_app/src/models/routine.dart';
 import 'package:skating_routine_app/src/models/skating_element.dart';
+import 'package:skating_routine_app/src/providers/element_provider.dart';
 import 'package:skating_routine_app/src/providers/profile_provider.dart';
-import 'package:skating_routine_app/src/services/database_helper.dart';
 import 'package:skating_routine_app/src/services/firestore_service.dart';
 import 'package:skating_routine_app/src/services/transition_validator.dart';
 
 class RoutineProvider with ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
-  final DatabaseHelper _dbHelper = DatabaseHelper();
   final TransitionValidator _validator = TransitionValidator();
   ProfileProvider? _profileProvider;
+  ElementProvider? _elementProvider;
 
   List<Routine> _routines = [];
   Routine? _activeRoutine;
@@ -26,6 +26,11 @@ class RoutineProvider with ChangeNotifier {
   Routine? get activeRoutine => _activeRoutine;
   List<SkatingElement> get searchResults => _searchResults;
   Map<int, bool> get validationErrors => _validationErrors;
+
+  void update(ProfileProvider profileProvider, ElementProvider elementProvider) {
+    updateUser(profileProvider);
+    _elementProvider = elementProvider;
+  }
 
   void updateUser(ProfileProvider profileProvider) {
     if (_profileProvider?.user?.firebaseUid !=
@@ -47,20 +52,23 @@ class RoutineProvider with ChangeNotifier {
     }
   }
 
-  Future<void> searchElements(String query) async {
-    if (query.isEmpty) {
+  void searchElements(String query) {
+    if (query.isEmpty || _elementProvider == null) {
       _searchResults = [];
     } else {
-      _searchResults = await _dbHelper.searchElements(query);
+      _searchResults = _elementProvider!.elements
+          .where((element) =>
+              element.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
     }
     notifyListeners();
   }
 
-  void startNewRoutine() {
+  void startNewRoutine(String name) {
     if (_profileProvider?.user == null) return;
     _activeRoutine = Routine(
       userId: _profileProvider!.user!.firebaseUid,
-      name: 'New Routine',
+      name: name,
       elements: [],
     );
     notifyListeners();
@@ -70,6 +78,13 @@ class RoutineProvider with ChangeNotifier {
     _activeRoutine = routine;
     _validateRoutine();
     notifyListeners();
+  }
+
+  void updateRoutineName(String name) {
+    if (_activeRoutine != null) {
+      _activeRoutine = _activeRoutine!.copyWith(name: name);
+      notifyListeners();
+    }
   }
 
   void addElementToRoutine(SkatingElement element) {
