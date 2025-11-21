@@ -27,9 +27,11 @@ class MainApp extends StatelessWidget {
         Provider<AuthService>(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProxyProvider<ProfileProvider, RoutineProvider>(
-          create: (context) => RoutineProvider(context.read<ProfileProvider>()),
-          update: (context, profileProvider, previous) =>
-              RoutineProvider(profileProvider),
+          create: (context) => RoutineProvider(),
+          update: (context, profileProvider, previous) {
+            previous?.updateUser(profileProvider);
+            return previous!;
+          },
         ),
       ],
       child: MaterialApp(

@@ -27,15 +27,8 @@ class ProfileScreen extends StatelessWidget {
                   value: provider.user!.level,
                   onChanged: (SkatingLevel? newValue) {
                     if (newValue != null) {
-                      final updatedUser = User(
-                        id: provider.user!.id,
-                        firebaseUid: provider.user!.firebaseUid,
-                        name: provider.user!.name,
-                        level: newValue,
-                        rotationDirection:
-                            provider.user!.rotationDirection,
-                      );
-                      provider.updateProfile(updatedUser);
+                      provider.updateProfile(
+                          provider.user!.copyWith(level: newValue));
                     }
                   },
                   items: SkatingLevel.values.map((SkatingLevel level) {
@@ -54,14 +47,8 @@ class ProfileScreen extends StatelessWidget {
                   value: provider.user!.rotationDirection,
                   onChanged: (RotationDirection? newValue) {
                     if (newValue != null) {
-                      final updatedUser = User(
-                        id: provider.user!.id,
-                        firebaseUid: provider.user!.firebaseUid,
-                        name: provider.user!.name,
-                        level: provider.user!.level,
-                        rotationDirection: newValue,
-                      );
-                      provider.updateProfile(updatedUser);
+                      provider.updateProfile(provider.user!
+                          .copyWith(rotationDirection: newValue));
                     }
                   },
                   items: RotationDirection.values.map((
