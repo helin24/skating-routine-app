@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:skating_routine_app/src/models/routine.dart';
+import 'package:skating_routine_app/src/models/skating_element.dart';
 import 'package:skating_routine_app/src/models/user.dart';
 
 class FirestoreService {
@@ -34,12 +35,19 @@ class FirestoreService {
         .collection('routines')
         .where('userId', isEqualTo: userId)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Routine.fromFirestore(doc))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Routine.fromFirestore(doc)).toList());
   }
 
   Future<void> deleteRoutine(String routineId) {
     return _db.collection('routines').doc(routineId).delete();
+  }
+
+  // Skating Element methods
+  Future<List<SkatingElement>> getSkatingElements() async {
+    final snapshot = await _db.collection('skating_elements').get();
+    return snapshot.docs
+        .map((doc) => SkatingElement.fromMap(doc.data()))
+        .toList();
   }
 }

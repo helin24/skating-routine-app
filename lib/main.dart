@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skating_routine_app/src/providers/element_provider.dart';
 import 'package:skating_routine_app/src/providers/profile_provider.dart';
 import 'package:skating_routine_app/src/providers/routine_provider.dart';
 import 'package:skating_routine_app/src/services/auth_service.dart';
@@ -26,10 +27,13 @@ class MainApp extends StatelessWidget {
       providers: [
         Provider<AuthService>(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
-        ChangeNotifierProxyProvider<ProfileProvider, RoutineProvider>(
+        ChangeNotifierProvider(
+            create: (context) => ElementProvider()..loadElements()),
+        ChangeNotifierProxyProvider2<ProfileProvider, ElementProvider,
+            RoutineProvider>(
           create: (context) => RoutineProvider(),
-          update: (context, profileProvider, previous) {
-            previous?.updateUser(profileProvider);
+          update: (context, profileProvider, elementProvider, previous) {
+            previous?.update(profileProvider, elementProvider);
             return previous!;
           },
         ),
