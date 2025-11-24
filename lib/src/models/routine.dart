@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:skating_routine_app/src/models/skating_element.dart';
+import 'package:skating_routine_app/src/models/routine_element.dart';
 
 class Routine {
   final String? id;
   final String userId;
   final String name;
-  final List<SkatingElement> elements;
+  final List<RoutineElement> elements;
 
   Routine({
     this.id,
@@ -20,7 +20,7 @@ class Routine {
       userId: map['userId'],
       name: map['name'],
       elements: (map['elements'] as List)
-          .map((e) => SkatingElement.fromMap(e))
+          .map((e) => RoutineElement.fromMap(e))
           .toList(),
     );
   }
@@ -32,7 +32,7 @@ class Routine {
       userId: map['userId'],
       name: map['name'],
       elements: (map['elements'] as List)
-          .map((e) => SkatingElement.fromMap(e))
+          .map((e) => RoutineElement.fromMap(e))
           .toList(),
     );
   }
@@ -49,7 +49,7 @@ class Routine {
     String? id,
     String? userId,
     String? name,
-    List<SkatingElement>? elements,
+    List<RoutineElement>? elements,
   }) {
     return Routine(
       id: id ?? this.id,
