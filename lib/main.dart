@@ -28,9 +28,13 @@ class MainApp extends StatelessWidget {
         Provider<AuthService>(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(
-            create: (context) => ElementProvider()..loadElements()),
-        ChangeNotifierProxyProvider2<ProfileProvider, ElementProvider,
-            RoutineProvider>(
+          create: (context) => ElementProvider()..loadElements(),
+        ),
+        ChangeNotifierProxyProvider2<
+          ProfileProvider,
+          ElementProvider,
+          RoutineProvider
+        >(
           create: (context) => RoutineProvider(),
           update: (context, profileProvider, elementProvider, previous) {
             previous?.update(profileProvider, elementProvider);
@@ -60,16 +64,17 @@ class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
-    final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+    final profileProvider = Provider.of<ProfileProvider>(
+      context,
+      listen: false,
+    );
 
     return StreamBuilder<User?>(
       stream: authService.user,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.active) {
           return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: Center(child: CircularProgressIndicator()),
           );
         }
 

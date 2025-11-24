@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:skating_routine_app/src/models/routine.dart';
+import 'package:skating_routine_app/src/models/routine_element.dart';
 import 'package:skating_routine_app/src/models/skating_element.dart';
 import 'package:skating_routine_app/src/providers/element_provider.dart';
 import 'package:skating_routine_app/src/providers/profile_provider.dart';
@@ -88,18 +89,58 @@ class RoutineProvider with ChangeNotifier {
   }
 
   void addElementToRoutine(SkatingElement element) {
-    if (_activeRoutine != null) {
-      _activeRoutine = _activeRoutine!.copyWith(
-        elements: [..._activeRoutine!.elements, element],
+    if (_activeRoutine == null) return;
+
+    RoutineElement newRoutineElement;
+
+    if (element.isTurn) {
+      // Get the exit of the previous element, or assume a default if it's the first element
+      final previousElement = _activeRoutine!.elements.isNotEmpty
+          ? _activeRoutine!.elements.last
+          : null;
+      final entryFoot = previousElement?.exitFoot ?? Foot.right;
+      final entryEdge = previousElement?.exitEdge ?? Edge.outside;
+
+      // Calculate the exit based on the turn's rules
+      final turnDetails = element.turnDetails!;
+      final exitFoot =
+          turnDetails.changesFoot ? _toggleFoot(entryFoot) : entryFoot;
+      final exitEdge =
+          turnDetails.changesEdge ? _toggleEdge(entryEdge) : entryEdge;
+
+      newRoutineElement = RoutineElement(
+        baseElementCode: element.code,
+        name: '${_footToString(entryFoot)}${_edgeToString(entryEdge)} ${element.name}',
+        type: element.type,
+        entryFoot: entryFoot,
+        entryEdge: entryEdge,
+        exitFoot: exitFoot,
+        exitEdge: exitEdge,
+        isToeAssist: false,
       );
-      _validateRoutine();
-      notifyListeners();
+    } else {
+      newRoutineElement = RoutineElement(
+        baseElementCode: element.code,
+        name: element.name,
+        type: element.type,
+        entryFoot: element.entryFoot!,
+        entryEdge: element.entryEdge!,
+        exitFoot: element.exitFoot!,
+        exitEdge: element.exitEdge!,
+        isToeAssist: element.isToeAssist,
+      );
     }
+
+    _activeRoutine = _activeRoutine!.copyWith(
+      elements: [..._activeRoutine!.elements, newRoutineElement],
+    );
+    _validateRoutine();
+    notifyListeners();
   }
 
   void removeElementFromRoutine(int index) {
     if (_activeRoutine != null) {
-      final newElements = List<SkatingElement>.from(_activeRoutine!.elements)
+      final newElements = List<RoutineElement>.from(_activeRoutine!.elements)
         ..removeAt(index);
       _activeRoutine = _activeRoutine!.copyWith(elements: newElements);
       _validateRoutine();
@@ -112,7 +153,7 @@ class RoutineProvider with ChangeNotifier {
       if (newIndex > oldIndex) {
         newIndex -= 1;
       }
-      final newElements = List<SkatingElement>.from(_activeRoutine!.elements);
+      final newElements = List<RoutineElement>.from(_activeRoutine!.elements);
       final element = newElements.removeAt(oldIndex);
       newElements.insert(newIndex, element);
       _activeRoutine = _activeRoutine!.copyWith(elements: newElements);
@@ -149,6 +190,12 @@ class RoutineProvider with ChangeNotifier {
   Future<void> deleteRoutine(String routineId) async {
     await _firestoreService.deleteRoutine(routineId);
   }
+
+  // Helper methods for turn logic
+  Foot _toggleFoot(Foot foot) => foot == Foot.left ? Foot.right : Foot.left;
+  Edge _toggleEdge(Edge edge) => edge == Edge.inside ? Edge.outside : Edge.inside;
+  String _footToString(Foot foot) => foot == Foot.left ? 'L' : 'R';
+  String _edgeToString(Edge edge) => edge == Edge.inside ? 'I' : 'O';
 
   @override
   void dispose() {

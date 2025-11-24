@@ -100,7 +100,8 @@ class _RoutineBuilderScreenState extends State<RoutineBuilderScreen> {
                     itemBuilder: (context, index) {
                       final element = provider.activeRoutine!.elements[index];
                       return ListTile(
-                        key: ValueKey(element.id),
+                        key: ValueKey(
+                            '${element.baseElementCode}-${element.name}-$index'),
                         title: Text(element.name),
                         tileColor: provider.validationErrors.containsKey(index)
                             ? Colors.red.withAlpha((255 * 0.2).round())
